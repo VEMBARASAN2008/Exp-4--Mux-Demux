@@ -15,10 +15,57 @@ Boolean Functions
 <img width="575" height="65" alt="image" src="https://github.com/user-attachments/assets/04c2d90c-0b6b-4b35-b603-d0e10e1e4f00" />
 
 ## Design / RTL Program
+module mux2to1(
+input A,B,S,
+output Y
+);
 
+assign Y = (~S & A) | (S & B);
+
+endmodule
+
+module demux1to2(
+input D,S,
+output Y0,Y1
+);
+
+assign Y0 = (~S) & D;
+assign Y1 = S & D;
+
+endmodule
 ```
 ## **Testbench Program
+module tb4;
 
+reg A,B,S,D;
+wire Y,Y0,Y1;
+
+mux2to1 m1(A,B,S,Y);
+
+demux1to2 d1(D,S,Y0,Y1);
+
+initial begin
+
+$dumpfile("mux_demux.vcd");
+$dumpvars(0,tb4);
+
+$monitor("S=%b A=%b B=%b Y=%b D=%b Y0=%b Y1=%b",
+S,A,B,Y,D,Y0,Y1);
+
+S=0; A=0; B=0; D=0; #10;
+S=0; A=0; B=1; D=1; #10;
+S=0; A=1; B=0; D=1; #10;
+S=0; A=1; B=1; D=0; #10;
+
+S=1; A=0; B=0; D=0; #10;
+S=1; A=0; B=1; D=1; #10;
+S=1; A=1; B=0; D=1; #10;
+S=1; A=1; B=1; D=0; #10;
+
+#10 $finish;
+
+end
+endmodule
 
 
 ## Truth Table
@@ -84,6 +131,7 @@ The 2:1 Multiplexer and 1:2 Demultiplexer were realized using Verilog HDL:
 The design was compiled and simulated using Synopsys VCS, and the functionality was verified using DVE waveform analysis, matching the expected truth table.
 
 ## Output
+<img width="1920" height="1080" alt="Screenshot 2026-11-03 110114" src="https://github.com/user-attachments/assets/46e5e40f-e060-4d45-a09a-13b85ecb83f8" />
 
 
 ## Viva-Voce Questions
